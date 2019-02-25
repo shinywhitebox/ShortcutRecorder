@@ -26,23 +26,30 @@ NSBundle *SRBundle()
 
         if (!Bundle)
         {
-            // Could be a CocoaPods framework with embedded resources bundle.
-            // Look up "use_frameworks!" and "resources_bundle" in CocoaPods documentation.
-            Bundle = [NSBundle bundleWithIdentifier:@"org.cocoapods.ShortcutRecorder"];
-
-            if (!Bundle)
-            {
-                Class c = NSClassFromString(@"SRRecorderControl");
-
-                if (c)
+            // Try our changed fw identifier
+            Bundle = [NSBundle bundleWithIdentifier:@"com.shinywhitebox.com.kulakov.ShortcutRecorder"];
+            
+            if(!Bundle) {
+                // Could be a CocoaPods framework with embedded resources bundle.
+                // Look up "use_frameworks!" and "resources_bundle" in CocoaPods documentation.
+                Bundle = [NSBundle bundleWithIdentifier:@"org.cocoapods.ShortcutRecorder"];
+                
+                if (!Bundle)
                 {
-                    Bundle = [NSBundle bundleForClass:c];
+                    Class c = NSClassFromString(@"SRRecorderControl");
+                    
+                    if (c)
+                    {
+                        Bundle = [NSBundle bundleForClass:c];
+                    }
                 }
             }
 
             if (Bundle)
             {
-                Bundle = [NSBundle bundleWithPath:[Bundle pathForResource:@"ShortcutRecorder" ofType:@"bundle"]];
+                // Unsure why the .strings are not found.
+                // Certainly this bundle isnt!
+//                Bundle = [NSBundle bundleWithPath:[Bundle pathForResource:@"ShortcutRecorder" ofType:@"bundle"]];
             }
         }
     });
